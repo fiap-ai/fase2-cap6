@@ -14,35 +14,60 @@ Este comando inicia a interface de linha de comando interativa do nosso sistema 
 
 ## Comandos de Teste
 
-Para executar os testes do nosso projeto, você pode usar os seguintes comandos:
+Para executar todos os testes do projeto de uma vez:
+
+```
+python -m unittest discover -v tests
+```
+
+Este comando executará todos os testes unitários e de integração localizados na pasta 'tests'.
+
+Para executar testes específicos, você pode usar os seguintes comandos:
 
 1. Teste do sistema climático:
 ```
-python src/test_climate_system.py
+python -m unittest tests.test_climate_system
 ```
 
 2. Teste das operações CRUD no Oracle:
 ```
-python src/test_oracle_crud.py
+python -m unittest tests.test_oracle_crud
 ```
 
 3. Teste da conexão com o Oracle:
 ```
-python src/test_oracle.py
+python -m unittest tests.test_oracle
+```
+
+4. Teste da API de clima:
+```
+python -m unittest tests.test_weather_api
+```
+
+5. Testes de desempenho:
+```
+python -m unittest tests.test_performance
 ```
 
 Estes comandos executam os testes correspondentes e fornecem feedback sobre o funcionamento das diferentes partes do nosso sistema.
 
-4. Teste da API de clima:
+## Outros Comandos Úteis
+
+1. Instalação de dependências:
 ```
-python src/weather_api.py
+pip install -r requirements.txt
 ```
 
-Este comando executa um teste da API de clima, buscando dados meteorológicos para o Rio de Janeiro, Brasil.
-
-5. Inicialização do banco de dados:
+2. Limpeza da pasta de build:
 ```
-python src/database.py
+python src/main.py
 ```
+Selecione a opção 9 no menu interativo para limpar todos os dados e arquivos gerados.
 
-Este comando cria a tabela necessária no banco de dados Oracle. Observe que esta operação é executada automaticamente quando o arquivo é importado, então normalmente não é necessário executá-lo diretamente.
+3. Exportação de dados para CSV:
+```
+python src/main.py
+```
+Selecione a opção 5 no menu interativo para exportar dados para CSV.
+
+Lembre-se de que para executar qualquer comando, você deve estar no diretório raiz do projeto e ter o ambiente virtual ativado (se estiver usando um).

@@ -39,13 +39,13 @@ Ao adotar este sistema, os produtores rurais estarão melhor equipados para enfr
 
 ## Tecnologias Utilizadas
 
-- **Linguagem**: Python 3.x
-- **Banco de Dados**: Oracle
+- **Linguagem**: Python 3.8 ou superior
+- **Banco de Dados**: Oracle 19c ou superior
 - **Bibliotecas Principais**:
   - `requests`: Para chamadas à API meteorológica
   - `cx_Oracle`: Para conexão com o banco de dados Oracle
   - `matplotlib`: Para geração de gráficos relevantes para análise agrícola
-  - `pandas`: Para manipulação e análise de dados climáticos
+  - `numpy`: Para cálculos e análises numéricas
 
 ## Estrutura do Projeto
 
@@ -57,13 +57,16 @@ Ao adotar este sistema, os produtores rurais estarão melhor equipados para enfr
 │   ├── climate_analysis.py  # Funções para análise de dados climáticos relevantes para agricultura
 │   ├── database.py          # Funções para interação com o banco de dados
 │   ├── weather_api.py       # Funções para interação com a API meteorológica
-│   └── config.py            # Configurações do sistema
+│   ├── config.py            # Configurações do sistema
+│   └── db_config.py         # Configurações do banco de dados
 ├── docs/
 │   ├── README.md            # Documentação detalhada do projeto
+│   ├── api_info.md          # Informações sobre a API de clima utilizada
+│   ├── commands.md          # Lista de comandos úteis
+│   ├── functional_requirements.md  # Requisitos funcionais do sistema
 │   └── non_functional_requirements.md  # Requisitos não funcionais do sistema
 ├── build/                   # Pasta para armazenar gráficos e arquivos gerados
 ├── tests/                   # Pasta para testes unitários e de integração
-├── venv/                    # Ambiente virtual Python (não versionado)
 ├── .env                     # Arquivo para armazenar variáveis de ambiente (não versionado)
 ├── .gitignore               # Arquivo para especificar arquivos/pastas ignorados pelo Git
 ├── requirements.txt         # Lista de dependências do projeto
@@ -74,7 +77,8 @@ Ao adotar este sistema, os produtores rurais estarão melhor equipados para enfr
 
 1. Clone o repositório:
    ```
-   git clone git@github.com:fiap-ai/fase2-cap6.git
+   git clone https://github.com/fiap-ai/fase2-cap6.git
+   cd fase2-cap6
    ```
 
 2. Instale as dependências:
@@ -85,9 +89,10 @@ Ao adotar este sistema, os produtores rurais estarão melhor equipados para enfr
 3. Configure as variáveis de ambiente no arquivo `.env`:
    ```
    OPENWEATHERMAP_API_KEY=sua_chave_api
-   DB_USER=seu_usuario_oracle
-   DB_PASSWORD=sua_senha_oracle
-   DB_DSN=seu_dsn_oracle
+   ORACLE_USER=seu_usuario_oracle
+   ORACLE_PASSWORD=sua_senha_oracle
+   ORACLE_DSN=seu_dsn_oracle
+   ORACLE_CLIENT_PATH=/path/to/oracle/instantclient
    ```
 
 4. Execute o programa principal:
@@ -100,7 +105,7 @@ Ao adotar este sistema, os produtores rurais estarão melhor equipados para enfr
 Ao executar o programa, um menu interativo será apresentado com as seguintes opções:
 
 1. Buscar dados reais
-2. Ver relatório climático
+2. Ver e exportar relatório climático
 3. Gerar gráfico de dados climáticos
 4. Configurar limiares de alerta
 5. Exportar dados para CSV

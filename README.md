@@ -37,6 +37,14 @@ O sistema foi projetado com foco na usabilidade, permitindo que os usuários int
 
 Este sistema tem o potencial de impactar significativamente o setor agrícola, fornecendo informações cruciais para o planejamento de plantio, irrigação, colheita e outras atividades agrícolas. Ao antecipar condições climáticas adversas, o sistema ajuda a mitigar riscos e otimizar a produção agrícola, contribuindo para a segurança alimentar e a eficiência do agronegócio.
 
+Para mais detalhes sobre o projeto, consulte nossa documentação adicional:
+
+- [Visão geral e detalhes de implementação](docs/README.md)
+- [Informações sobre a API de clima utilizada](docs/api_info.md)
+- [Lista de comandos úteis](docs/commands.md)
+- [Requisitos funcionais](docs/functional_requirements.md)
+- [Requisitos não funcionais](docs/non_functional_requirements.md)
+
 
 ## 📁 Estrutura de pastas
 
@@ -113,24 +121,16 @@ Você pode instalar todas as bibliotecas necessárias usando o arquivo `requirem
      ORACLE_CLIENT_PATH=/path/to/oracle/instantclient
      ```
 
-5. Configure o banco de dados Oracle:
-   - Execute os scripts SQL fornecidos na pasta `docs` para criar as tabelas necessárias
-
 ### Execução
 
 Para executar o programa principal:
 
-1. Navegue até a pasta `src`:
+1. Execute o arquivo `main.py`:
    ```
-   cd src
-   ```
-
-2. Execute o arquivo `main.py`:
-   ```
-   python main.py
+   python src/main.py
    ```
 
-3. Siga as instruções no menu interativo para utilizar as diferentes funcionalidades do sistema.
+2. Siga as instruções no menu interativo para utilizar as diferentes funcionalidades do sistema.
 
 ### Execução dos Testes
 
