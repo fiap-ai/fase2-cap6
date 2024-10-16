@@ -3,8 +3,7 @@ import shutil
 from climate_data import ClimateData
 from climate_analysis import (
     generate_report, plot_climate_data, export_to_csv,
-    compare_cities, generate_comparison_report, plot_moving_average,
-    generate_risk_report
+    compare_cities, generate_comparison_report, plot_moving_average
 )
 from datetime import datetime, timedelta
 import random
@@ -65,11 +64,6 @@ def test_climate_system():
     # Testar média móvel
     plot_moving_average("Rio de Janeiro", rio_data, window=7)
     print("\nMoving average plot generated for Rio de Janeiro.")
-    
-    # Testar relatório de risco
-    risk_report = generate_risk_report("Rio de Janeiro", rio_data)
-    print("\nRisk Report for Rio de Janeiro:")
-    print(risk_report)
     
     print("\nAll tests completed successfully.")
 

@@ -106,4 +106,4 @@ if __name__ == "__main__":
         print(f"Descrição: {data['current']['weather'][0]['description']}")
         print(f"\nPrevisão para os próximos {len(data['daily'])} dias (limitado pela API gratuita):")
         for day in data['daily']:
-            print(f"{day['date']}: Max {day['temp']['max']}°C, Min {day['temp']['min']}°C, Precipitação: {day['precipitation']:.1f}mm, {day['weather'][0]['description']}")
+            print(f"{day['date']}: Max {day['temp_max']:.1f}°C, Min {day['temp_min']:.1f}°C, Precipitação: {day['precipitation']:.1f}mm, {day['weather']['description']}")

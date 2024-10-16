@@ -7,6 +7,17 @@ def create_table():
     try:
         connection = cx_Oracle.connect(**DB_CONFIG)
         cursor = connection.cursor()
+        
+        # Check if the table already exists
+        cursor.execute("""
+            SELECT table_name 
+            FROM user_tables 
+            WHERE table_name = 'CLIMATE_DATA'
+        """)
+        if cursor.fetchone():
+            print("Table 'CLIMATE_DATA' already exists")
+            return
+
         cursor.execute("""
             CREATE TABLE climate_data (
                 id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

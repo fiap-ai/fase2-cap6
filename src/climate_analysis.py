@@ -12,7 +12,12 @@ def get_precipitation(entry):
     return entry[2] if isinstance(entry, tuple) else entry['precipitation']
 
 def get_date(entry):
-    return entry[0] if isinstance(entry, tuple) else datetime.strptime(entry['date'] + ' ' + entry['time'], '%Y-%m-%d %I:%M:%S %p')
+    if isinstance(entry, tuple):
+        return entry[0]
+    elif 'time' in entry:
+        return datetime.strptime(entry['date'] + ' ' + entry['time'], '%Y-%m-%d %I:%M:%S %p')
+    else:
+        return datetime.strptime(entry['date'], '%Y-%m-%d')
 
 def calculate_average_temperature(data):
     temperatures = [get_temperature(entry) for entry in data]
