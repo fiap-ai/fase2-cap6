@@ -1,0 +1,10 @@
+Relatório Climático para Teresopolis
+Período: 2024-10-16 12:00:00 PM a 2024-10-21 12:00:00 PM
+Temperatura média: 15.8°C
+Precipitação total: 67.8mm
+SPI simplificado: -2.85
+
+Nenhum alerta gerado para os limiares atuais.
+
+Recomendações:
+Não há recomendações específicas baseadas nos alertas atuais.

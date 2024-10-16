@@ -8,7 +8,6 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-build/
 develop-eggs/
 dist/
 downloads/
@@ -132,5 +131,4 @@ dmypy.json
 .vscode/
 
 # Project specific
-build/*
 !build/.gitkeep

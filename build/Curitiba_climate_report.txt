@@ -1,0 +1,14 @@
+Relatório Climático para Curitiba
+Período: 2024-10-16 12:00:00 PM a 2024-10-21 12:00:00 PM
+Temperatura média: 15.0°C
+Precipitação total: 66.4mm
+SPI simplificado: -2.34
+
+Alertas:
+Alerta de alta precipitação em 2024-10-18 12:00:00 PM: 52.2mm
+
+Recomendações:
+Devido a 1 alerta(s) de alta precipitação:
+- Verifique e melhore a drenagem do solo
+- Considere o uso de culturas de cobertura para prevenir erosão
+- Monitore sinais de doenças fúngicas nas plantas

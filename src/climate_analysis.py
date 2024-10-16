@@ -27,10 +27,6 @@ def calculate_total_precipitation(data):
     return sum(get_precipitation(entry) for entry in data)
 
 def calculate_spi(data, period=30):
-    """
-    Calcula um Índice de Precipitação Padronizado (SPI) simplificado.
-    Este é um cálculo aproximado e não deve ser usado para análises reais.
-    """
     precipitations = [get_precipitation(entry) for entry in data]
     if not precipitations:
         return 0
@@ -99,10 +95,34 @@ def plot_climate_data(location, data):
     plt.gcf().autofmt_xdate()
     
     os.makedirs('build', exist_ok=True)
-    plt.savefig(f'build/{location}_climate_data.png')
+    file_path = f'build/{location}_climate_data.png'
+    plt.savefig(file_path)
     plt.close()
 
     print(f"Gráfico gerado para {location}")
+    return file_path
+
+def generate_recommendations(alerts):
+    recommendations = []
+    high_temp_count = sum(1 for alert in alerts if "alta temperatura" in alert)
+    high_precip_count = sum(1 for alert in alerts if "alta precipitação" in alert)
+
+    if high_temp_count > 0:
+        recommendations.append(f"Devido a {high_temp_count} alerta(s) de alta temperatura:")
+        recommendations.append("- Aumente a frequência de irrigação")
+        recommendations.append("- Considere o uso de coberturas para proteger as culturas sensíveis")
+        recommendations.append("- Monitore sinais de estresse térmico nas plantas")
+
+    if high_precip_count > 0:
+        recommendations.append(f"Devido a {high_precip_count} alerta(s) de alta precipitação:")
+        recommendations.append("- Verifique e melhore a drenagem do solo")
+        recommendations.append("- Considere o uso de culturas de cobertura para prevenir erosão")
+        recommendations.append("- Monitore sinais de doenças fúngicas nas plantas")
+
+    if not recommendations:
+        recommendations.append("Não há recomendações específicas baseadas nos alertas atuais.")
+
+    return recommendations
 
 def export_to_csv(location, data, filename):
     os.makedirs('build', exist_ok=True)
@@ -120,6 +140,7 @@ def export_to_csv(location, data, filename):
             })
     
     print(f"Dados exportados para {full_path}")
+    return full_path
 
 def compare_cities(cities_data):
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))
@@ -146,10 +167,12 @@ def compare_cities(cities_data):
     plt.gcf().autofmt_xdate()
 
     os.makedirs('build', exist_ok=True)
-    plt.savefig('build/cities_comparison.png')
+    file_path = 'build/cities_comparison.png'
+    plt.savefig(file_path)
     plt.close()
 
-    print("Gráfico de comparação gerado: build/cities_comparison.png")
+    print(f"Gráfico de comparação gerado: {file_path}")
+    return file_path
 
 def generate_comparison_report(cities_data, temp_threshold, precip_threshold):
     report = "Relatório Comparativo entre Cidades\n\n"
@@ -204,29 +227,9 @@ def plot_moving_average(location, data, window):
     plt.gcf().autofmt_xdate()
 
     os.makedirs('build', exist_ok=True)
-    plt.savefig(f'build/{location}_moving_average.png')
+    file_path = f'build/{location}_moving_average.png'
+    plt.savefig(file_path)
     plt.close()
 
-    print(f"Gráfico de média móvel gerado: build/{location}_moving_average.png")
-
-def generate_recommendations(alerts):
-    recommendations = []
-    high_temp_count = sum(1 for alert in alerts if "alta temperatura" in alert)
-    high_precip_count = sum(1 for alert in alerts if "alta precipitação" in alert)
-
-    if high_temp_count > 0:
-        recommendations.append(f"Devido a {high_temp_count} alerta(s) de alta temperatura:")
-        recommendations.append("- Aumente a frequência de irrigação")
-        recommendations.append("- Considere o uso de coberturas para proteger as culturas sensíveis")
-        recommendations.append("- Monitore sinais de estresse térmico nas plantas")
-
-    if high_precip_count > 0:
-        recommendations.append(f"Devido a {high_precip_count} alerta(s) de alta precipitação:")
-        recommendations.append("- Verifique e melhore a drenagem do solo")
-        recommendations.append("- Considere o uso de culturas de cobertura para prevenir erosão")
-        recommendations.append("- Monitore sinais de doenças fúngicas nas plantas")
-
-    if not recommendations:
-        recommendations.append("Não há recomendações específicas baseadas nos alertas atuais.")
-
-    return recommendations
+    print(f"Gráfico de média móvel gerado: {file_path}")
+    return file_path

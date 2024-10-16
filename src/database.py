@@ -1,11 +1,23 @@
 import cx_Oracle
 from db_config import DB_CONFIG
 import traceback
+from datetime import datetime
+
+# Create a connection pool
+pool = cx_Oracle.SessionPool(
+    user=DB_CONFIG['user'],
+    password=DB_CONFIG['password'],
+    dsn=DB_CONFIG['dsn'],
+    min=2,
+    max=5,
+    increment=1,
+    threaded=True
+)
 
 def create_table():
     connection = None
     try:
-        connection = cx_Oracle.connect(**DB_CONFIG)
+        connection = pool.acquire()
         cursor = connection.cursor()
         
         # Check if the table already exists
@@ -33,30 +45,55 @@ def create_table():
         print(f"Error creating table: {error}")
     finally:
         if connection:
-            connection.close()
+            pool.release(connection)
 
 def insert_data(location, date_time, temperature, precipitation):
     connection = None
     try:
-        connection = cx_Oracle.connect(**DB_CONFIG)
+        connection = pool.acquire()
         cursor = connection.cursor()
+        # Convert date_time to datetime object if it's a string
+        if isinstance(date_time, str):
+            try:
+                date_obj = datetime.strptime(date_time, "%Y-%m-%d")
+            except ValueError:
+                date_obj = datetime.strptime(date_time, "%d-%b-%Y %I:%M:%S %p")
+        else:
+            date_obj = date_time
         cursor.execute("""
             INSERT INTO climate_data (location, date_time, temperature, precipitation)
             VALUES (:1, :2, :3, :4)
-        """, (location, date_time, temperature, precipitation))
+        """, (location, date_obj, temperature, precipitation))
         connection.commit()
         print("Data inserted successfully")
     except cx_Oracle.Error as error:
         print(f"Error inserting data: {error}")
     finally:
         if connection:
-            connection.close()
+            pool.release(connection)
+
+def insert_data_batch(data_list):
+    connection = None
+    try:
+        connection = pool.acquire()
+        cursor = connection.cursor()
+        cursor.executemany("""
+            INSERT INTO climate_data (location, date_time, temperature, precipitation)
+            VALUES (:1, :2, :3, :4)
+        """, data_list)
+        connection.commit()
+        print(f"{len(data_list)} records inserted successfully")
+    except cx_Oracle.Error as error:
+        print(f"Error inserting batch data: {error}")
+    finally:
+        if connection:
+            pool.release(connection)
 
 def get_unique_locations():
     connection = None
     try:
         print("Conectando ao banco de dados para obter localizações únicas")
-        connection = cx_Oracle.connect(**DB_CONFIG)
+        connection = pool.acquire()
         cursor = connection.cursor()
         cursor.execute("SELECT DISTINCT location FROM climate_data")
         locations = [row[0] for row in cursor.fetchall()]
@@ -68,14 +105,14 @@ def get_unique_locations():
         return []
     finally:
         if connection:
-            connection.close()
+            pool.release(connection)
             print("Conexão fechada após obter localizações únicas")
 
 def fetch_data(location):
     connection = None
     try:
         print(f"Conectando ao banco de dados para buscar dados de {location}")
-        connection = cx_Oracle.connect(**DB_CONFIG)
+        connection = pool.acquire()
         cursor = connection.cursor()
         cursor.execute("""
             SELECT date_time, temperature, precipitation
@@ -92,13 +129,13 @@ def fetch_data(location):
         return []
     finally:
         if connection:
-            connection.close()
+            pool.release(connection)
             print(f"Conexão fechada após buscar dados para {location}")
 
 def delete_all_data():
     connection = None
     try:
-        connection = cx_Oracle.connect(**DB_CONFIG)
+        connection = pool.acquire()
         cursor = connection.cursor()
         cursor.execute("DELETE FROM climate_data")
         connection.commit()
@@ -107,42 +144,58 @@ def delete_all_data():
         print(f"Error deleting all data: {error}")
     finally:
         if connection:
-            connection.close()
+            pool.release(connection)
 
 def update_data(location, date_time, temperature, precipitation):
     connection = None
     try:
-        connection = cx_Oracle.connect(**DB_CONFIG)
+        connection = pool.acquire()
         cursor = connection.cursor()
+        # Convert date_time to datetime object if it's a string
+        if isinstance(date_time, str):
+            try:
+                date_obj = datetime.strptime(date_time, "%Y-%m-%d")
+            except ValueError:
+                date_obj = datetime.strptime(date_time, "%d-%b-%Y %I:%M:%S %p")
+        else:
+            date_obj = date_time
         cursor.execute("""
             UPDATE climate_data
             SET temperature = :1, precipitation = :2
             WHERE location = :3 AND date_time = :4
-        """, (temperature, precipitation, location, date_time))
+        """, (temperature, precipitation, location, date_obj))
         connection.commit()
         print("Data updated successfully")
     except cx_Oracle.Error as error:
         print(f"Error updating data: {error}")
     finally:
         if connection:
-            connection.close()
+            pool.release(connection)
 
 def delete_data(location, date_time):
     connection = None
     try:
-        connection = cx_Oracle.connect(**DB_CONFIG)
+        connection = pool.acquire()
         cursor = connection.cursor()
+        # Convert date_time to datetime object if it's a string
+        if isinstance(date_time, str):
+            try:
+                date_obj = datetime.strptime(date_time, "%Y-%m-%d")
+            except ValueError:
+                date_obj = datetime.strptime(date_time, "%d-%b-%Y %I:%M:%S %p")
+        else:
+            date_obj = date_time
         cursor.execute("""
             DELETE FROM climate_data
             WHERE location = :1 AND date_time = :2
-        """, (location, date_time))
+        """, (location, date_obj))
         connection.commit()
         print("Data deleted successfully")
     except cx_Oracle.Error as error:
         print(f"Error deleting data: {error}")
     finally:
         if connection:
-            connection.close()
+            pool.release(connection)
 
 # Initialize the database
 create_table()

@@ -18,7 +18,7 @@ def clear_build_folder():
 
 def print_menu():
     print("\n1. Buscar dados reais")
-    print("2. Ver relatório climático")
+    print("2. Ver e exportar relatório climático")
     print("3. Gerar gráfico de dados climáticos")
     print("4. Configurar limiares de alerta")
     print("5. Exportar dados para CSV")
@@ -43,6 +43,13 @@ def get_date_input(prompt, min_date, max_date):
 def delete_file_if_exists(file_path):
     if os.path.exists(file_path):
         os.remove(file_path)
+
+def export_report(location, report):
+    build_path = os.path.join(os.path.dirname(__file__), '..', 'build')
+    file_path = os.path.join(build_path, f"{location}_climate_report.txt")
+    with open(file_path, 'w', encoding='utf-8') as f:
+        f.write(report)
+    print(f"Relatório exportado para {file_path}")
 
 def main():
     try:
@@ -81,6 +88,7 @@ def main():
                         if data:
                             report = generate_report(location, data, temp_threshold, precip_threshold)
                             print(report)
+                            export_report(location, report)
                             print("-" * 50)
                         else:
                             print(f"Sem dados para {location}")

@@ -11,9 +11,21 @@ class ClimateData:
     def load_data_from_database(self):
         locations = get_unique_locations()
         for location in locations:
-            self.data[location] = fetch_data(location)
+            db_data = fetch_data(location)
+            self.data[location] = [
+                {
+                    'date': entry[0].strftime("%Y-%m-%d"),
+                    'time': entry[0].strftime("%I:%M:%S %p"),
+                    'temperature': entry[1],
+                    'precipitation': entry[2]
+                }
+                for entry in db_data
+            ]
 
     def add_data(self, location, temperature, precipitation, date=None, time=None):
+        if not isinstance(temperature, (int, float)) or not isinstance(precipitation, (int, float)):
+            raise ValueError("Temperature and precipitation must be numbers")
+
         if date is None:
             date = datetime.now().strftime("%Y-%m-%d")
         if time is None:
@@ -42,11 +54,14 @@ class ClimateData:
             oracle_date = datetime.strptime(date_time, "%Y-%m-%d %I:%M:%S %p").strftime("%d-%b-%Y %I:%M:%S %p")
             update_data(location, oracle_date, temperature, precipitation)
             
-            for entry in self.data[location]:
-                if entry['date'] == date and entry['time'] == time:
-                    entry['temperature'] = temperature
-                    entry['precipitation'] = precipitation
-                    break
+            if location in self.data:
+                for entry in self.data[location]:
+                    if entry['date'] == date and entry['time'] == time:
+                        entry['temperature'] = temperature
+                        entry['precipitation'] = precipitation
+                        break
+            else:
+                print(f"Location '{location}' not found in local data. Updating only in database.")
         except Exception as e:
             print(f"Error updating data: {e}")
             print(traceback.format_exc())
@@ -57,7 +72,8 @@ class ClimateData:
             oracle_date = datetime.strptime(date_time, "%Y-%m-%d %I:%M:%S %p").strftime("%d-%b-%Y %I:%M:%S %p")
             delete_data(location, oracle_date)
             
-            self.data[location] = [entry for entry in self.data[location] if not (entry['date'] == date and entry['time'] == time)]
+            if location in self.data:
+                self.data[location] = [entry for entry in self.data[location] if not (entry['date'] == date and entry['time'] == time)]
         except Exception as e:
             print(f"Error deleting data: {e}")
             print(traceback.format_exc())
@@ -82,7 +98,16 @@ class ClimateData:
 
     def get_data(self, location, start_date=None, end_date=None):
         if location not in self.data:
-            self.data[location] = fetch_data(location)
+            db_data = fetch_data(location)
+            self.data[location] = [
+                {
+                    'date': entry[0].strftime("%Y-%m-%d"),
+                    'time': entry[0].strftime("%I:%M:%S %p"),
+                    'temperature': entry[1],
+                    'precipitation': entry[2]
+                }
+                for entry in db_data
+            ]
         
         data = self.data.get(location, [])
         
@@ -90,7 +115,7 @@ class ClimateData:
             return []
 
         if start_date is None and end_date is None:
-            return data
+            return sorted(data, key=lambda x: x['date'])
         
         filtered_data = []
         for entry in data:
@@ -98,7 +123,7 @@ class ClimateData:
             if (start_date is None or entry_date >= start_date) and (end_date is None or entry_date <= end_date):
                 filtered_data.append(entry)
         
-        return filtered_data
+        return sorted(filtered_data, key=lambda x: x['date'])
 
     def get_all_locations(self):
         return list(self.data.keys())
